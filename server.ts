@@ -13,8 +13,8 @@ const extensionsMIME = {
 	".mkv" : "video/mkv"
 };
 
-const pageTemplate = fs.readFileSync("index.html");
-const picsPerPage = 42;
+const pageTemplate = fs.readFileSync("index.html", "utf8");
+const picsPerPage = 3;
 const metadata = [];
 
 function genPic(id:number):string {
@@ -34,16 +34,17 @@ function parseMetadata() {
 	}
 }
 
-const server = http.createServer((req, res) => {
+const server = http.createServer((req:any, res:any) => {
+	// Requested file path
 	let filePath = "." + req.url;
-	if(filePath == "./") filePath = "./index.html";
 	let extension = filePath.match(/\.[^.]+$/)[0];
-	let contentType = "text/html";
 
 	// Detect content type
+	let contentType = "text/html";
 	if(Object.keys(extensionsMIME).includes(extension))
 		contentType = extensionsMIME[extension];
 
+	// If not requesting a page, just send the file
 	if(contentType != "text/html") {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", contentType);
@@ -53,18 +54,20 @@ const server = http.createServer((req, res) => {
 		return;
 	}
 
+	// Get url GET parameters
 	let urlparams = new URLSearchParams(req.url.replace(/^\//, ""));
 	const query = urlparams.get("q");
-	const page = urlparams.get("p");
+	const page = urlparams.get("p") || "0";
 
+	// Set HTTP header
 	res.statusCode = 200;
 	res.setHeader("Content-Type", "text/html");
 
-	let data = fs.readFileSync("./index.html", "utf8");
+	// Generate the page
 	let picDOM = "";
 	for(let i = 0; i < 9; i++)
 		picDOM += genPic(i);
-	data = data.replace("<!--PICS-->", picDOM);
+	let data = pageTemplate.replace("<!--PICS-->", picDOM);
 	res.write(data);
 
 	res.end();
