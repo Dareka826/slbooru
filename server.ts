@@ -2,6 +2,17 @@ const http = require("http");
 const fs   = require("fs");
 const url  = require("url");
 
+const extensionsMIME = {
+	".js"  :  "text/javascript",
+	".css" :  "text/css",
+	".jpg" : "image/jpeg",
+	".jpeg": "image/jpeg",
+	".png" : "image/png",
+	".mp4" : "video/mp4",
+	".webm": "video/webm",
+	".mkv" : "video/mkv"
+};
+
 const pageTemplate = fs.readFileSync("index.html");
 const picsPerPage = 42;
 const metadata = [];
@@ -29,30 +40,9 @@ const server = http.createServer((req, res) => {
 	let extension = filePath.match(/\.[^.]+$/)[0];
 	let contentType = "text/html";
 
-	switch(extension) {
-		case ".js":
-			contentType = "text/javascript";
-			break;
-		case ".css":
-			contentType = "text/css";
-			break;
-		case ".jpg":
-		case ".jpeg":
-			contentType = "image/jpeg";
-			break;
-		case ".png":
-			contentType = "image/png";
-			break;
-		case ".mp4":
-			contentType = "video/mp4";
-			break;
-		case ".webm":
-			contentType = "video/webm";
-			break;
-		case ".mkv":
-			contentType = "video/mkv";
-			break;
-	}
+	// Detect content type
+	if(Object.keys(extensionsMIME).includes(extension))
+		contentType = extensionsMIME[extension];
 
 	if(contentType != "text/html") {
 		res.statusCode = 200;
