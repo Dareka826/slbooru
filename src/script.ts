@@ -31,13 +31,9 @@ if(page_info[0] == "1") {
 	btn.style.color = buttonDisabledColor;
 }
 
-// If in single image mode
-if(parameters.get("m") == "i") {
-	// Remove prev/next buttons
-	gid("pages-nav").style.display = "none";
-	// Change main view flex direction
+// Change main view flex direction, if in single image mode
+if(parameters.get("m") == "i")
 	gid("main-view").style.flexDirection = "column";
-}
 
 // Reload with a new query
 function search_execute(page:number = 0) {
@@ -69,11 +65,4 @@ function changeQuery(tag:string, mode:TagChangeMode) {
 	// Set the value of search input to the query
 	search_input.value = query;
 	search_execute();
-}
-
-// Change the page
-function changePage(offset:number) {
-	let new_page = Number(parameters.get("p") || "0") + offset;
-	if(new_page >= 0)
-		search_execute(new_page);
 }

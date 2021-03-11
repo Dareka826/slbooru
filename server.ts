@@ -53,11 +53,13 @@ function genPage(urlparams:URLSearchParams):string {
 			picDOM += genPic(candidates[id], "small", query);
 
 		let tagDOM = genTags(candidates, query);
-		let pageIndicator = (page_id+1) + '/' + Math.ceil(candidates.length/picsPerPage);
+		let navbarDOM = navbarGen(
+			page_id, Math.ceil(candidates.length/picsPerPage), query
+		);
 
 		data = data.replace("<!--PICS-->", picDOM);
 		data = data.replace("<!--TAGS-->", tagDOM);
-		data = data.replace("<!--PAGEINDICATOR-->", pageIndicator);
+		data = data.replace("<!--NAVBAR-->", navbarDOM);
 	} else if(page_variant == "i") {
 		// Single image view
 		const image_id = Number(urlparams.get("i") || "0");
@@ -189,7 +191,7 @@ function genPic(id:number, variant:ImageVariant, query:string=""):string {
 
 	let img_url = "/img/" + metadata[id].file;
 	let _divclass:string, _url:string, _imgclass:string;
-	
+
 	if(variant == "small") {
 		_divclass = "image-small-container";
 		_url = "/?" + params.toString();
@@ -202,6 +204,16 @@ function genPic(id:number, variant:ImageVariant, query:string=""):string {
 
 	return `<div class="${ _divclass }"><a href="${ _url }">` +
 		`<img src="${ img_url }" class="${ _imgclass }"/></a></div>`;
+}
+
+// Generate navigation bar
+function navbarGen(page_id:number, total_pages:number, query:string) {
+	let e = `<div id="pages-nav">` +
+		`<a href="/?q=${query}&p=${page_id-1}"><button id="prev-page-btn">&lt;</button></a>` +
+		`<div id="page-indicator">${page_id+1}/${total_pages}</div>` +
+		`<a href="/?q=${query}&p=${page_id+1}"><button id="next-page-btn">&gt;</button></a>` +
+		`</div>`;
+	return e;
 }
 
 // Reads the metadata json files and puts them into the metadata variable
