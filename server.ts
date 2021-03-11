@@ -15,14 +15,14 @@ const extensionsMIME = {
 };
 
 // Load index.html data at server start;
-const pageTemplate:string = fs.readFileSync("index.html", "utf8");
+const pageTemplate = fs.readFileSync("index.html", "utf8");
 const picsPerPage = 42;
 const metadata = []; // All images' metadata is stored here (probably bad)
 
 // Generate the page based on the GET parameters
 function genPage(urlparams:URLSearchParams):string {
 	let data = pageTemplate;
-	let page_variant = urlparams.get("m") || "p";
+	const page_variant = urlparams.get("m") || "p";
 
 	if(page_variant == "p") {
 		// Posts view
@@ -86,6 +86,7 @@ function matchImagesToQuery(query:string):Array<number> {
 	for(let i = 0; i < metadata.length; i++)
 		qualified.push(i);
 
+	// For every rule in query
 	for(let rule of rules) {
 		if(rule[0] == '-') {
 			// Exclude tag
@@ -113,19 +114,24 @@ function genTags(candidates:Array<number>, query:string):string {
 	let tagDOM = "";
 	let tags:Object = {};
 
+	// Get the tags already in use
 	let tags_in_query = [];
-	for(let rule of query.split(" "))
+	for(let rule of query.split(" ")) {
 		if(rule[0] == "-")
 			tags_in_query.push(rule.substr(1,query.length));
 		else if(rule != "")
 			tags_in_query.push(rule);
+	}
 
-	for(let id of candidates)
+	// Get and count the tags from pictures selected by query
+	for(let id of candidates) {
 		for(let tag of metadata[id].tags) {
 			if(Object.keys(tags).includes(tag)) tags[tag] += 1;
 			else                                tags[tag]  = 1;
 		}
+	}
 
+	// Generate tags excluding those in use
 	for(let tag of Object.keys(tags))
 		if(!tags_in_query.includes(tag))
 			tagDOM += createTagElem(tag, tags[tag], true);
@@ -149,13 +155,15 @@ function genTagsSingleImage(image_id:number):string {
 		// Append the created tag element to the tag sidebar
 		tagDOM += createTagElem(tag, tagCount, false);
 	}
+
 	return tagDOM;
 }
 
 // Create tag element's DOM
 function createTagElem(tag:string, count:number, functional_opts:boolean) {
-	let tagDOM = '<div class="tagitem">'
+	let tagDOM = '<div class="tagitem">';
 
+	// Add + - options
 	if(functional_opts) {
 		tagDOM += '<a href="javascript:;" onclick="changeQuery(';
 		tagDOM += "'" + tag + "', 'add')\">+</a>&nbsp;";
@@ -166,34 +174,27 @@ function createTagElem(tag:string, count:number, functional_opts:boolean) {
 	tagDOM += '<a href="javascript:;" onclick="changeQuery(';
 	tagDOM += "'" + tag + "', 'replace'" + ')">' + tag;
 	tagDOM += '</a>&nbsp;<span class="count">';
-	tagDOM += count;
-	tagDOM += '</span></div>';
+	tagDOM += count + '</span></div>';
+
 	return tagDOM;
 }
 
 // Create picture's DOM
 type ImageVariant = "small" | "large";
 function genPic(id:number, variant:ImageVariant):string {
-	let e:string = '<div class="';
+	let e = '<div class="';
 
 	e += (variant == "small") ? "image-small-container" : "image-big-container";
-
-	e += '"><img src="';
-	e += 'img/' + metadata[id].file;
-	e += '" class="';
-
+	e += '"><img src="img/' + metadata[id].file + '" class="';
 	e += (variant == "small") ? "image-small" : "image-large";
+	e += '" onclick="picSelected(' + "'" + id + "'" + ')"></img></div>';
 
-	e += '" onclick="picSelected(';
-	e += "'" + id + "'";
-	e += ')"></img></div>';
 	return e;
 }
 
 // Reads the metadata json files and puts them into the metadata variable
 function pullInMetadata() {
-	const metadataFiles = fs.readdirSync("metadata");
-	metadataFiles.sort();
+	const metadataFiles = fs.readdirSync("metadata").sort();
 	let x = 0;
 	for(let mdf of metadataFiles) {
 		let data = fs.readFileSync("metadata/" + mdf);
