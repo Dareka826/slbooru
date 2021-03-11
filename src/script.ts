@@ -71,20 +71,6 @@ function changeQuery(tag:string, mode:TagChangeMode) {
 	search_execute();
 }
 
-// Redirect to single picture mode
-function picSelected(picid:number) {
-	let parameters = new URLSearchParams();
-	parameters.set("q", search_input.value); // Keep the query
-	parameters.set("m", "i"); // Image mode
-	parameters.set("i", picid.toString()); // Image id
-
-	let elem_a = document.createElement("a");
-	document.body.appendChild(elem_a);
-	elem_a.style.display = "none";
-	elem_a.href = "/?" + parameters.toString();
-	elem_a.click();
-}
-
 // Change the page
 function changePage(offset:number) {
 	let new_page = Number(parameters.get("p") || "0") + offset;
