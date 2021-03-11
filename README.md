@@ -9,3 +9,11 @@ The directory structure should be as follows:
 /img/<images>
 /metadata/<json metadata>
 ```
+
+Metadata file format:
+```json
+{
+	"file": <file from /img/>,
+	"tags": [ <the tags for the image> ]
+}
+```
