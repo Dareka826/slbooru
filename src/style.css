@@ -104,6 +104,8 @@ a:active          {  color: #60f;    }
 #pages-nav {
 	display: flex;
 	justify-content: center;
+	align-items: center;
+	font-family: Monospace;
 }
 #pages-nav button {
 	width: 30px;
@@ -112,5 +114,10 @@ a:active          {  color: #60f;    }
 	border: 1px solid #f60;
 	background-color: rgba(0,0,0,0.0);
 	color: #f60;
+	font-family: Monospace;
 	cursor: pointer;
+}
+#page-indicator {
+	font-size: 20px;
+	padding: 0px 10px 0px 10px;
 }

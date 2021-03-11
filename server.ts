@@ -53,9 +53,11 @@ function genPage(urlparams:URLSearchParams):string {
 			picDOM += genPic(candidates[id], "small");
 
 		let tagDOM = genTags(candidates, query);
+		let pageIndicator = (page_id+1) + '/' + Math.ceil(candidates.length/picsPerPage);
 
 		data = data.replace("<!--PICS-->", picDOM);
 		data = data.replace("<!--TAGS-->", tagDOM);
+		data = data.replace("<!--PAGEINDICATOR-->", pageIndicator);
 	} else if(page_variant == "i") {
 		// Single image view
 		const image_id = Number(urlparams.get("i") || "0");
