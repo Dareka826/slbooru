@@ -1,7 +1,8 @@
-const http = require("http");
-const fs   = require("fs");
-const url  = require("url");
+const http = require("http"); // For server
+const fs   = require("fs");   // For reading files
+const url  = require("url");  // For parsing url get requests
 
+// The content type in header for files
 const extensionsMIME = {
 	".js"  :  "text/javascript",
 	".css" :  "text/css",
@@ -13,10 +14,12 @@ const extensionsMIME = {
 	".mkv" : "video/mkv"
 };
 
+// Load index.html data at server start;
 const pageTemplate:string = fs.readFileSync("index.html", "utf8");
 const picsPerPage = 42;
-const metadata = [];
+const metadata = []; // All images' metadata is stored here (probably bad)
 
+// Generate the page based on the GET parameters
 function genPage(urlparams:URLSearchParams):string {
 	let data = pageTemplate;
 	let page_variant = urlparams.get("m") || "p";
@@ -49,7 +52,10 @@ function genPage(urlparams:URLSearchParams):string {
 			// Iterate over ids on page
 			picDOM += genPic(candidates[id], "small");
 
+		let tagDOM = genTags(candidates, query);
+
 		data = data.replace("<!--PICS-->", picDOM);
+		data = data.replace("<!--TAGS-->", tagDOM);
 	} else if(page_variant == "i") {
 		// Single image view
 		const image_id = Number(urlparams.get("i") || "0");
@@ -59,17 +65,19 @@ function genPage(urlparams:URLSearchParams):string {
 		// Add a link to get the image directly
 		picDOM += '<div style="padding-left: 5px;"><a href="img/';
 		picDOM += metadata[image_id].file + '">Original Image</a></div>';
+
+		// Generate the tag view
+		let tagDOM = genTagsSingleImage(image_id);
+
 		// Insert the generated data
 		data = data.replace("<!--PICS-->", picDOM);
-		
-		// Generate the tag view
-		let tagDOM = genTags("", true, image_id);
 		data = data.replace("<!--TAGS-->", tagDOM);
 	}
 
 	return data;
 }
 
+// Get all qualified images matched by query
 function matchImagesToQuery(query:string):Array<number> {
 	let qualified:Array<number> = [];
 	let rules = query.split(" ");
@@ -100,36 +108,70 @@ function matchImagesToQuery(query:string):Array<number> {
 	return qualified;
 }
 
-function genTags(query:string, single_image:boolean, image_id:number = -1):string {
+// Create tag elements from candidates
+function genTags(candidates:Array<number>, query:string):string {
 	let tagDOM = "";
-	if(single_image) {
-		let tags = metadata[image_id].tags;
+	let tags:Object = {};
 
-		// For every tag of the image
-		for(let tag of tags) {
-			// Count the number of occurences of the tag
-			let tagCount = 0;
-			for(let i = 0; i < metadata.length; i++)
-				if(metadata[i].tags.includes(tag))
-					tagCount++;
+	let tags_in_query = [];
+	for(let rule of query.split(" "))
+		if(rule[0] == "-")
+			tags_in_query.push(rule.substr(1,query.length));
+		else if(rule != "")
+			tags_in_query.push(rule);
 
-			// Append the created tag element to the tag sidebar
-			tagDOM += createTagElem(tag, tagCount, false);
+	for(let id of candidates)
+		for(let tag of metadata[id].tags) {
+			if(Object.keys(tags).includes(tag)) tags[tag] += 1;
+			else                                tags[tag]  = 1;
 		}
+
+	for(let tag of Object.keys(tags))
+		if(!tags_in_query.includes(tag))
+			tagDOM += createTagElem(tag, tags[tag], true);
+
+	return tagDOM;
+}
+
+// Create tag elements
+function genTagsSingleImage(image_id:number):string {
+	let tagDOM = "";
+	let tags = metadata[image_id].tags;
+
+	// For every tag of the image
+	for(let tag of tags) {
+		// Count the number of occurences of the tag
+		let tagCount = 0;
+		for(let i = 0; i < metadata.length; i++)
+			if(metadata[i].tags.includes(tag))
+				tagCount++;
+
+		// Append the created tag element to the tag sidebar
+		tagDOM += createTagElem(tag, tagCount, false);
 	}
 	return tagDOM;
 }
 
-function createTagElem(tag:string, count:number, add_exclude_option:boolean) {
+// Create tag element's DOM
+function createTagElem(tag:string, count:number, functional_opts:boolean) {
 	let tagDOM = '<div class="tagitem">'
+
+	if(functional_opts) {
+		tagDOM += '<a href="javascript:;" onclick="changeQuery(';
+		tagDOM += "'" + tag + "', 'add')\">+</a>&nbsp;";
+		tagDOM += '<a href="javascript:;" onclick="changeQuery(';
+		tagDOM += "'" + tag + "', 'exclude')\">-</a>&nbsp;";
+	}
+
 	tagDOM += '<a href="javascript:;" onclick="changeQuery(';
-	tagDOM += "'" + tag + "'" + ', ' + "'replace'" + ')">' + tag;
+	tagDOM += "'" + tag + "', 'replace'" + ')">' + tag;
 	tagDOM += '</a>&nbsp;<span class="count">';
 	tagDOM += count;
 	tagDOM += '</span></div>';
 	return tagDOM;
 }
 
+// Create picture's DOM
 type ImageVariant = "small" | "large";
 function genPic(id:number, variant:ImageVariant):string {
 	let e:string = '<div class="';
@@ -157,6 +199,7 @@ function pullInMetadata() {
 	}
 }
 
+// The server
 const server = http.createServer((req:any, res:any) => {
 	// Requested file path
 	let filePath = "." + req.url;
