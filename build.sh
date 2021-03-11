@@ -1,7 +1,7 @@
 #!/bin/sh
 
-rm script.js server.js
+rm src/script.js server.js
 
-tsc script.ts && \
+tsc --outFile src/script.js src/script.ts && \
 tsc server.ts && \
 node server.js
