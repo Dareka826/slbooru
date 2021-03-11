@@ -60,11 +60,10 @@ search_input.addEventListener("keypress", function(e) {
 });
 
 // Changes the query by adding, excluding tags or repclaing it
-type TagChangeMode = "add" | "exclude" | "replace";
+type TagChangeMode = "add" | "exclude";
 function changeQuery(tag:string, mode:TagChangeMode) {
 	if(mode == "add")          query += " " + tag;
 	else if(mode == "exclude") query += " -" + tag;
-	else                       query = tag;
 	// Remove leading space
 	if(query[0] == ' ') query = query.substr(1, query.length-1);
 	// Set the value of search input to the query

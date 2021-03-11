@@ -173,8 +173,7 @@ function createTagElem(tag:string, count:number, functional_opts:boolean) {
 			`onclick="changeQuery('${tag}', 'exclude')">-</a>&nbsp;`;
 	}
 
-	tagDOM += `<a href="javascript:;" ` +
-		`onclick="changeQuery('${tag}', 'replace')">${tag}</a>&nbsp;` +
+	tagDOM += `<a href="/?q=${tag}">${tag}</a>&nbsp;` +
 		`<span class="count">${count}</span></div>`;
 
 	return tagDOM;
