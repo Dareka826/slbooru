@@ -64,9 +64,7 @@ body {
 	display: flex;
 	flex-wrap: wrap;
 }
-.main-view-single-image {
-	flex-direction: column;
-}
+.main-view-single-image { flex-direction: column; }
 
 .image-small-container {
 	margin: 5px;
@@ -92,7 +90,7 @@ body {
 
 .count { color: #ccc; }
 
-a { outline: 0; }
+a                 { outline: 0;      }
 a:link, a:visited {  color: #f60;    }
 a:hover           { cursor: pointer; }
 a:active          {  color: #60f;    }
