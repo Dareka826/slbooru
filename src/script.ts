@@ -55,7 +55,7 @@ search_input.addEventListener("keypress", function(e) {
 		search_execute();
 });
 
-// Changes the query by adding, excluding tags or repclaing it
+// Changes the query by adding or excluding tags
 type TagChangeMode = "add" | "exclude";
 function changeQuery(tag:string, mode:TagChangeMode) {
 	if(mode == "add")          query += " " + tag;
