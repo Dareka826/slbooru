@@ -199,7 +199,14 @@ function genPic(id:number, variant:ImageVariant):string {
 
 // Reads the metadata json files and puts them into the metadata variable
 function pullInMetadata() {
-	const metadataFiles = fs.readdirSync("metadata").sort();
+	const metadataFiles = fs.readdirSync("metadata").sort((a:string, b:string) => {
+		let id1:number = Number(a.match(/[0-9]+/)[0]);
+		let id2:number = Number(b.match(/[0-9]+/)[0]);
+		
+		if(id1 < id2) return -1;
+		if(id1 > id2) return  1;
+		return 0;
+	});
 	let x = 0;
 	for(let mdf of metadataFiles) {
 		let data = fs.readFileSync("metadata/" + mdf);
