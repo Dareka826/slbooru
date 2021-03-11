@@ -15,7 +15,7 @@ for item in "$@"; do
 		# If not, copy the file into img/
 		cp "$item" "img/${CHKSUM}.${EXTENSION}"
 		# Get the biggest exisitng id from metadata files
-		BIGGEST_ID=$(ls -1 metadata | sed 's/\.json//' | sort -r | head -1)
+		BIGGEST_ID=$(ls -1 metadata | sed 's/\.json//' | sort -r -n | head -1)
 		# Create metadata file with empty tags
 		echo "{ \"file\": \"${CHKSUM}.${EXTENSION}\", \"tags\": [] }" \
 			| jq > "metadata/$((BIGGEST_ID + 1)).json"
