@@ -18,5 +18,6 @@ Metadata file format (see example.json):
 }
 ```
 
-To build the server and site script run `./scripts/build.sh` from project root
-To add a new image run `./scripts/add_img_to_db.sh` from projects root
+To prepare the environment for building: `npm install`
+To build the server and site script run `./scripts/build.sh`
+To add a new image run `./scripts/add_img_to_db.sh`
