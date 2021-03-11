@@ -14,7 +14,7 @@ search_input.value = query;
 
 // If in single image mode
 if(parameters.get("m") == "i") {
-	// Remove prev/next buttons 
+	// Remove prev/next buttons
 	gid("pages-nav").style.display = "none";
 	// Change main view flex direction
 	gid("main-view").style.flexDirection = "column";
