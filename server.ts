@@ -16,7 +16,7 @@ const extensionsMIME = {
 
 // Load index.html data at server start;
 const pageTemplate = fs.readFileSync("src/index.html", "utf8");
-const picsPerPage = 42; // How many pictures to display on a page
+const picsPerPage = 24; // How many pictures to display on a page
 const metadata = []; // All images' metadata is stored here (probably bad)
 
 // Generate the page based on the GET parameters
