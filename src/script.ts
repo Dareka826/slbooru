@@ -67,6 +67,6 @@ function picSelected(picid:number) {
 // Change the page
 function changePage(offset:number) {
 	let new_page = Number(parameters.get("p") || "0") + offset;
-	if(new_page < 0) new_page = 0;
-	search_execute(new_page);
+	if(new_page >= 0)
+		search_execute(new_page);
 }
