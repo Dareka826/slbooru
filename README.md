@@ -18,4 +18,5 @@ Metadata file format (see example.json):
 }
 ```
 
-To add a new image run `./scripts/add_img_to_db.sh` from project's root
+To build the server and site script run `./scripts/build.sh` from project root
+To add a new image run `./scripts/add_img_to_db.sh` from projects root
