@@ -17,3 +17,5 @@ Metadata file format (see example.json):
 	"tags": [ "<the tags for the image>" ]
 }
 ```
+
+To add a new image run `./scripts/add_img_to_db.sh` from project's root
