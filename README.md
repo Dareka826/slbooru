@@ -13,7 +13,7 @@ The directory structure should be as follows:
 Metadata file format:
 ```json
 {
-	"file": <file from /img/>,
-	"tags": [ <the tags for the image> ]
+	"file": "<file from /img/>",
+	"tags": [ "<the tags for the image>" ]
 }
 ```
