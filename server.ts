@@ -63,7 +63,7 @@ function genPage(urlparams:URLSearchParams):string {
 		// Create the picture element
 		let picDOM = genPic(image_id, "large");
 		// Add a link to get the image directly
-		picDOM += '<div style="padding-left: 5px; padding-bottom: 5px;"><a href="img/';
+		picDOM += '<div class="orig-img-cnt"><a href="img/';
 		picDOM += metadata[image_id].file + '">Original Image</a></div>';
 
 		// Generate the tag view

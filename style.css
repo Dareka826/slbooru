@@ -82,7 +82,7 @@ body {
 	max-height: 200px;
 }
 
-.image-large { width: 100%; }
+.image-large { max-width: 100%; }
 
 .tagitem   {     font-family: Monospace; }
 .tagitem a { text-decoration: none;      }
@@ -98,6 +98,8 @@ a:active          {  color: #60f;    }
 	font-size: 24px;
 	font-family: Monospace;
 }
+
+.orig-img-cnt { margin: 0px 5px 10px 5px; }
 
 #pages-nav {
 	display: flex;
