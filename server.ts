@@ -187,12 +187,10 @@ function genPic(id:number, variant:ImageVariant):string {
 	let e = '<div class="';
 
 	e += (variant == "small") ? "image-small-container" : "image-big-container";
-	e += '"><img src="img/' + metadata[id].file + '" class="';
+	e += '"><a href="javascript:;" onclick="picSelected(' + "'" + id + "'" + ')">';
+	e += '<img src="img/' + metadata[id].file + '" class="';
 	e += (variant == "small") ? "image-small" : "image-large";
-
-	if(variant == "small")
-		e += '" onclick="picSelected(' + "'" + id + "'" + ')"></img></div>';
-	else e += '"></img></div>';
+	e += '"></img></a></div>';
 
 	return e;
 }
