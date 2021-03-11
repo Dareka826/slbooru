@@ -60,7 +60,7 @@ body {
 	padding: 5px;
 }
 
-#pictures {
+#main-view {
 	padding: 0px 5px 5px 5px;
 	display: flex;
 	flex-wrap: wrap;
@@ -78,11 +78,46 @@ body {
 	align-items: center;
 }
 
+.image-big-container {
+	margin: 5px;
+}
+
 .image-small {
 	max-width: 200px;
 	max-height: 200px;
 }
 
+.image-large {
+	width: 100%;
+}
+
 .tagitem {
+	font-family: Monospace;
+}
+.tagitem a {
+	text-decoration: none;
+}
+
+.count {
+	color: #ccc;
+}
+
+a:link {
+	color: #f60;
+}
+a:visited {
+	color: #f60;
+}
+a:hover {
+	cursor: pointer;
+}
+a:active {
+	color: #60f;
+}
+
+.info-notfound {
+	margin: 5px;
+	font-size: 24px;
+	font-family: Monospace;
 }
 
