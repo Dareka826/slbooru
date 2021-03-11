@@ -10,7 +10,7 @@ The directory structure should be as follows:
 /metadata/<json metadata>
 ```
 
-Metadata file format:
+Metadata file format (see example.json):
 ```json
 {
 	"file": "<file from /img/>",
