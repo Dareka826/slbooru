@@ -10,12 +10,13 @@ let page = parameters.get("p") || "0";
 let search_input:HTMLInputElement   = gid("search_input");
 let search_button:HTMLButtonElement = gid("search_button");
 
+// Set the search field to the query
 search_input.value = query;
 
 // Reload with a new query
 function search_execute() {
 	let parameters = new URLSearchParams();
-	parameters.set("q", search_input.value);
+	parameters.set("q", search_input.value); // Set the query
 	parameters.set("p", page);
 
 	let elem_a = document.createElement("a");
