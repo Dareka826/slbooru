@@ -14,6 +14,7 @@ let search_button:HTMLButtonElement = gid("search_button");
 
 // Set the search field to the query
 search_input.value = query;
+console.log("set search_input");
 
 // Disable navigation buttons based on page id
 let page_info = gid("page-indicator").innerText.split('/');
@@ -64,6 +65,9 @@ function changeQuery(tag:string, mode:TagChangeMode) {
 	if(mode == "add")          query += " " + tag;
 	else if(mode == "exclude") query += " -" + tag;
 	else                       query = tag;
+	// Remove leading space
+	if(query[0] == ' ') query = query.substr(1, query.length-1);
+	// Set the value of search input to the query
 	search_input.value = query;
 	search_execute();
 }

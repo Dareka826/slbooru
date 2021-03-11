@@ -22,11 +22,11 @@ const metadata = []; // All images' metadata is stored here (probably bad)
 // Generate the page based on the GET parameters
 function genPage(urlparams:URLSearchParams):string {
 	let data = pageTemplate;
+	const query = urlparams.get("q") || "";
 	const page_variant = urlparams.get("m") || "p";
 
 	if(page_variant == "p") {
 		// Posts view
-		const query = urlparams.get("q") || "";
 		const page_id = Number(urlparams.get("p") || "0");
 
 		let candidates:Array<number> = matchImagesToQuery(query);
@@ -50,7 +50,7 @@ function genPage(urlparams:URLSearchParams):string {
 		let picDOM = "";
 		for(let id = lowerID; id <= higherID && id < candidates.length; id++)
 			// Iterate over ids on page
-			picDOM += genPic(candidates[id], "small");
+			picDOM += genPic(candidates[id], "small", query);
 
 		let tagDOM = genTags(candidates, query);
 		let pageIndicator = (page_id+1) + '/' + Math.ceil(candidates.length/picsPerPage);
@@ -63,10 +63,10 @@ function genPage(urlparams:URLSearchParams):string {
 		const image_id = Number(urlparams.get("i") || "0");
 
 		// Create the picture element
-		let picDOM = genPic(image_id, "large");
+		let picDOM = genPic(image_id, "large", query);
 		// Add a link to get the image directly
-		picDOM += '<div class="orig-img-cnt"><a href="img/';
-		picDOM += metadata[image_id].file + '">Original Image</a></div>';
+		picDOM += `<div class="orig-img-cnt"><a ` +
+			`href="img/${metadata[image_id].file}">Original Image</a></div>`;
 
 		// Generate the tag view
 		let tagDOM = genTagsSingleImage(image_id);
@@ -167,32 +167,42 @@ function createTagElem(tag:string, count:number, functional_opts:boolean) {
 
 	// Add + - options
 	if(functional_opts) {
-		tagDOM += '<a href="javascript:;" onclick="changeQuery(';
-		tagDOM += "'" + tag + "', 'add')\">+</a>&nbsp;";
-		tagDOM += '<a href="javascript:;" onclick="changeQuery(';
-		tagDOM += "'" + tag + "', 'exclude')\">-</a>&nbsp;";
+		tagDOM += `<a href="javascript:;" ` +
+			`onclick="changeQuery('${tag}', 'add')">+</a>&nbsp;`;
+		tagDOM += `<a href="javascript:;" ` +
+			`onclick="changeQuery('${tag}', 'exclude')">-</a>&nbsp;`;
 	}
 
-	tagDOM += '<a href="javascript:;" onclick="changeQuery(';
-	tagDOM += "'" + tag + "', 'replace'" + ')">' + tag;
-	tagDOM += '</a>&nbsp;<span class="count">';
-	tagDOM += count + '</span></div>';
+	tagDOM += `<a href="javascript:;" ` +
+		`onclick="changeQuery('${tag}', 'replace')">${tag}</a>&nbsp;` +
+		`<span class="count">${count}</span></div>`;
 
 	return tagDOM;
 }
 
 // Create picture's DOM
 type ImageVariant = "small" | "large";
-function genPic(id:number, variant:ImageVariant):string {
-	let e = '<div class="';
+function genPic(id:number, variant:ImageVariant, query:string=""):string {
+	let params = new URLSearchParams();
+	params.set("m", "i");
+	params.set("i", id.toString());
+	params.set("q", query);
 
-	e += (variant == "small") ? "image-small-container" : "image-big-container";
-	e += '"><a href="javascript:;" onclick="picSelected(' + "'" + id + "'" + ')">';
-	e += '<img src="img/' + metadata[id].file + '" class="';
-	e += (variant == "small") ? "image-small" : "image-large";
-	e += '"></img></a></div>';
+	let img_url = "/img/" + metadata[id].file;
+	let _divclass:string, _url:string, _imgclass:string;
+	
+	if(variant == "small") {
+		_divclass = "image-small-container";
+		_url = "/?" + params.toString();
+		_imgclass = "image-small";
+	} else {
+		_divclass = "image-big-container";
+		_url = img_url;
+		_imgclass = "image-large";
+	}
 
-	return e;
+	return `<div class="${ _divclass }"><a href="${ _url }">` +
+		`<img src="${ img_url }" class="${ _imgclass }"/></a></div>`;
 }
 
 // Reads the metadata json files and puts them into the metadata variable
@@ -200,7 +210,7 @@ function pullInMetadata() {
 	const metadataFiles = fs.readdirSync("metadata").sort((a:string, b:string) => {
 		let id1:number = Number(a.match(/[0-9]+/)[0]);
 		let id2:number = Number(b.match(/[0-9]+/)[0]);
-		
+
 		if(id1 < id2) return -1;
 		if(id1 > id2) return  1;
 		return 0;
