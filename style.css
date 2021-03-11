@@ -60,7 +60,7 @@ body {
 }
 
 #main-view {
-	padding: 0px 5px 5px 5px;
+	padding: 0px 5px 0px 5px;
 	display: flex;
 	flex-wrap: wrap;
 }
@@ -99,3 +99,16 @@ a:active          {  color: #60f;    }
 	font-family: Monospace;
 }
 
+#pages-nav {
+	display: flex;
+	justify-content: center;
+}
+#pages-nav button {
+	width: 30px;
+	height: 30px;
+	margin: 5px;
+	border: 1px solid #f60;
+	background-color: rgba(0,0,0,0.0);
+	color: #f60;
+	cursor: pointer;
+}
