@@ -12,9 +12,13 @@ let search_button:HTMLButtonElement = gid("search_button");
 // Set the search field to the query
 search_input.value = query;
 
-// Remove prev/next buttons if in single image mode
-if(parameters.get("m") == "i")
+// If in single image mode
+if(parameters.get("m") == "i") {
+	// Remove prev/next buttons 
 	gid("pages-nav").style.display = "none";
+	// Change main view flex direction
+	gid("main-view").style.flexDirection = "column";
+}
 
 // Reload with a new query
 function search_execute(page:number = 0) {
