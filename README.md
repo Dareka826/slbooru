@@ -2,10 +2,10 @@
 
 The directory structure should be as follows:
 ```
-/index.html
-/script.js
-/style.css
 /server.js
+/src/index.html
+/src/script.js
+/src/style.css
 /img/<images>
 /metadata/<json metadata>
 ```
