@@ -187,7 +187,10 @@ function genPic(id:number, variant:ImageVariant):string {
 	e += (variant == "small") ? "image-small-container" : "image-big-container";
 	e += '"><img src="img/' + metadata[id].file + '" class="';
 	e += (variant == "small") ? "image-small" : "image-large";
-	e += '" onclick="picSelected(' + "'" + id + "'" + ')"></img></div>';
+
+	if(variant == "small")
+		e += '" onclick="picSelected(' + "'" + id + "'" + ')"></img></div>';
+	else e += '"></img></div>';
 
 	return e;
 }
