@@ -3,7 +3,7 @@ function gid(id:string):any { return document.getElementById(id); }
 
 // Get arguments from GET request
 let parameters = new URLSearchParams(window.location.search);
-let query = parameters.get("q");
+let query = parameters.get("q") || "";
 
 // Get the DOM elements
 let search_input:HTMLInputElement   = gid("search_input");
