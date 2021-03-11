@@ -108,7 +108,13 @@ a:active          {  color: #60f;    }
 	align-items: center;
 	font-family: Monospace;
 }
-#pages-nav button {
+
+#page-indicator {
+	font-size: 20px;
+	padding: 0px 10px 0px 10px;
+}
+
+.nav-button {
 	width: 30px;
 	height: 30px;
 	margin: 5px;
@@ -118,7 +124,9 @@ a:active          {  color: #60f;    }
 	font-family: Monospace;
 	cursor: pointer;
 }
-#page-indicator {
-	font-size: 20px;
-	padding: 0px 10px 0px 10px;
+
+.button-disabled {
+	border-color: #888;
+	color: #888;
+	cursor: default;
 }

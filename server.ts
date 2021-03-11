@@ -208,11 +208,28 @@ function genPic(id:number, variant:ImageVariant, query:string=""):string {
 
 // Generate navigation bar
 function navbarGen(page_id:number, total_pages:number, query:string) {
+	let btn_prev_disable = `class="nav-button"`,
+		btn_prev_href = `/?q=${query}&p=${page_id-1}`,
+		btn_next_disable = `class="nav-button"`,
+		btn_next_href = `/?q=${query}&p=${page_id+1}`;
+
+	if(page_id == 0) {
+		btn_prev_disable = 'disabled="true" class="nav-button button-disabled"';
+		btn_prev_href = "";
+	}
+	if(page_id+1 == total_pages) {
+		btn_next_disable = 'disabled="true" class="nav-button button-disabled"';
+		btn_next_href = "";
+	}
+
 	let e = `<div id="pages-nav">` +
-		`<a href="/?q=${query}&p=${page_id-1}"><button id="prev-page-btn">&lt;</button></a>` +
+		`<a href="${btn_prev_href}">` +
+		`<button id="prev-page-btn" ${btn_prev_disable}>&lt;</button></a>` +
 		`<div id="page-indicator">${page_id+1}/${total_pages}</div>` +
-		`<a href="/?q=${query}&p=${page_id+1}"><button id="next-page-btn">&gt;</button></a>` +
+		`<a href="${btn_next_href}">` +
+		`<button id="next-page-btn"${btn_next_disable}>&gt;</button></a>` +
 		`</div>`;
+
 	return e;
 }
 

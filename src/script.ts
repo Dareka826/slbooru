@@ -1,9 +1,6 @@
 // Get elem by id function
 function gid(id:string):any { return document.getElementById(id); }
 
-// Variables
-const buttonDisabledColor = "#888";
-
 // Get arguments from GET request
 let parameters = new URLSearchParams(window.location.search);
 let query = parameters.get("q") || "";
@@ -15,21 +12,6 @@ let search_button:HTMLButtonElement = gid("search_button");
 // Set the search field to the query
 search_input.value = query;
 console.log("set search_input");
-
-// Disable navigation buttons based on page id
-let page_info = gid("page-indicator").innerText.split('/');
-if(page_info[0] == page_info[1]) {
-	let btn = gid("next-page-btn");
-	btn.disabled = true;
-	btn.style.borderColor = buttonDisabledColor;
-	btn.style.color = buttonDisabledColor;
-}
-if(page_info[0] == "1") {
-	let btn = gid("prev-page-btn");
-	btn.disabled = true;
-	btn.style.borderColor = buttonDisabledColor;
-	btn.style.color = buttonDisabledColor;
-}
 
 // Change main view flex direction, if in single image mode
 if(parameters.get("m") == "i")
