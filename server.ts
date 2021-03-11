@@ -73,6 +73,12 @@ function genPage(urlparams:URLSearchParams):string {
 		// Generate the tag view
 		let tagDOM = genTagsSingleImage(image_id);
 
+		// Change flexbox direction
+		data = data.replace(
+			'<div id="main-view">',
+			'<div id="main-view" class="main-view-single-image">'
+		);
+
 		// Insert the generated data
 		data = data.replace("<!--PICS-->", picDOM);
 		data = data.replace("<!--TAGS-->", tagDOM);

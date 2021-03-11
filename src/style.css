@@ -64,6 +64,9 @@ body {
 	display: flex;
 	flex-wrap: wrap;
 }
+.main-view-single-image {
+	flex-direction: column;
+}
 
 .image-small-container {
 	margin: 5px;

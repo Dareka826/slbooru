@@ -11,11 +11,6 @@ let search_button:HTMLButtonElement = gid("search_button");
 
 // Set the search field to the query
 search_input.value = query;
-console.log("set search_input");
-
-// Change main view flex direction, if in single image mode
-if(parameters.get("m") == "i")
-	gid("main-view").style.flexDirection = "column";
 
 // Reload with a new query
 function search_execute(page:number = 0) {
@@ -23,6 +18,7 @@ function search_execute(page:number = 0) {
 	parameters.set("q", search_input.value); // Set the query
 	parameters.set("p", page.toString());
 
+	// Create an <a> tag and use it to change location, preserving history
 	let elem_a = document.createElement("a");
 	document.body.appendChild(elem_a);
 	elem_a.style.display = "none";
@@ -46,5 +42,5 @@ function changeQuery(tag:string, mode:TagChangeMode) {
 	if(query[0] == ' ') query = query.substr(1, query.length-1);
 	// Set the value of search input to the query
 	search_input.value = query;
-	search_execute();
+	search_execute(); // Search
 }
