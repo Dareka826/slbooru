@@ -132,7 +132,7 @@ function genTags(candidates:Array<number>, query:string):string {
 	}
 
 	// Generate tags excluding those in use
-	for(let tag of Object.keys(tags))
+	for(let tag of Object.keys(tags).sort())
 		if(!tags_in_query.includes(tag))
 			tagDOM += createTagElem(tag, tags[tag], true);
 
@@ -142,7 +142,7 @@ function genTags(candidates:Array<number>, query:string):string {
 // Create tag elements
 function genTagsSingleImage(image_id:number):string {
 	let tagDOM = "";
-	let tags = metadata[image_id].tags;
+	let tags = metadata[image_id].tags.sort();
 
 	// For every tag of the image
 	for(let tag of tags) {
