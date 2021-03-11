@@ -16,7 +16,7 @@ const extensionsMIME = {
 
 // Load index.html data at server start;
 const pageTemplate = fs.readFileSync("index.html", "utf8");
-const picsPerPage = 42;
+const picsPerPage = 42; // How many pictures to display on a page
 const metadata = []; // All images' metadata is stored here (probably bad)
 
 // Generate the page based on the GET parameters
@@ -44,7 +44,7 @@ function genPage(urlparams:URLSearchParams):string {
 		if(lowerID > candidates.length) {
 			// Page number out of range
 			let picDOM = '<div class="info-notfound">Page index out of range!</div>';
-			return data.replace("<!--TAGS-->", picDOM);
+			return data.replace("<!--PICS-->", picDOM);
 		}
 
 		let picDOM = "";
