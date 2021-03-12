@@ -10,9 +10,9 @@ const extensionsMIME = {
 	".jpeg": "image/jpeg",
 	".png" : "image/png",
 	".mp4" : "video/mp4",
-	".webm": "video/webm",
-	".mkv" : "video/mkv"
+	".webm": "video/webm"
 };
+const videoTypes = [ ".mp4", ".webm" ];
 
 // Load index.html data at server start;
 const pageTemplate = fs.readFileSync("src/index.html", "utf8");
@@ -195,21 +195,30 @@ function genPic(id:number, variant:ImageVariant, query:string=""):string {
 	params.set("i", id.toString());
 	params.set("q", query);
 
-	let img_url = "/img/" + metadata[id].file;
-	let _divclass:string, _url:string, _imgclass:string;
+	let file_url = "/img/" + metadata[id].file;
+	let file_extension = file_url.match(/\.[^.]+$/)[0];
+	let _divclass = "", _url = "", _imgclass = "";
+	let _video_opts = "";
 
 	if(variant == "small") {
 		_divclass = "image-small-container";
 		_url = "/?" + params.toString();
 		_imgclass = "image-small";
+		_video_opts = "muted";
 	} else {
 		_divclass = "image-big-container";
-		_url = img_url;
+		_url = file_url;
 		_imgclass = "image-large";
+		_video_opts = "controls";
 	}
 
-	return `<div class="${ _divclass }"><a href="${ _url }">` +
-		`<img src="${ img_url }" class="${ _imgclass }"/></a></div>`;
+	let e = "";
+	e += `<div class="${ _divclass }"><a href="${ _url }">`;
+	if(videoTypes.includes(file_extension))
+		e += `<video ${_video_opts} src="${ file_url }" class="${ _imgclass }"/></a></div>`;
+	else e += `<img src="${ file_url }" class="${ _imgclass }"/></a></div>`;
+
+	return e;
 }
 
 // Generate navigation bar

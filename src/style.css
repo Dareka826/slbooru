@@ -131,3 +131,7 @@ a:active          {  color: #60f;    }
 	color: #888;
 	cursor: default;
 }
+
+video {
+	border: 2px solid #60f;
+}
