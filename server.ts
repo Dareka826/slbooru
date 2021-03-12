@@ -2,7 +2,7 @@ import * as http from "http"; // For server
 import * as fs   from "fs";   // For reading files
 
 // The content type in header for files
-const extensionsMIME = {
+const extensionsMIME:Record<string, string> = {
 	".js"  :  "text/javascript",
 	".css" :  "text/css",
 	".jpg" : "image/jpeg",
@@ -13,10 +13,16 @@ const extensionsMIME = {
 };
 const videoTypes = [ ".mp4", ".webm" ];
 
+// Create an interface for the format of metadata files
+interface MetadataFile {
+	file: string;
+	tags: Array<string>;
+}
+
 // Load index.html data at server start;
 const pageTemplate = fs.readFileSync("src/index.html", "utf8");
 const picsPerPage = 24; // How many pictures to display on a page
-const metadata = []; // All images' metadata is stored here (probably bad)
+const metadata:Array<MetadataFile> = []; // All images' metadata is stored here (probably bad)
 
 // Generate the page based on the GET parameters
 function genPage(urlparams:URLSearchParams):string {
@@ -196,7 +202,7 @@ function genPic(id:number, variant:ImageVariant, query=""):string {
 	params.set("q", query);
 
 	const file_url = "/img/" + metadata[id].file;
-	const file_extension = file_url.match(/\.[^.]+$/)[0];
+	const file_extension = /\.[^.]+$/.exec(file_url)[0];
 	let _divclass = "", _url = "", _imgclass = "", _video_opts = "";
 
 	if(variant == "small") {
@@ -249,9 +255,10 @@ function navbarGen(page_id:number, total_pages:number, query:string) {
 
 // Reads the metadata json files and puts them into the metadata variable
 function pullInMetadata() {
+	const number_regex = new RegExp(/[0-9]+/);
 	const metadataFiles = fs.readdirSync("metadata").sort((a:string, b:string) => {
-		const id1 = Number(a.match(/[0-9]+/)[0]);
-		const id2 = Number(b.match(/[0-9]+/)[0]);
+		const id1 = Number(number_regex.exec(a)[0]);
+		const id2 = Number(number_regex.exec(b)[0]);
 
 		if(id1 < id2) return -1;
 		if(id1 > id2) return  1;
@@ -260,7 +267,7 @@ function pullInMetadata() {
 	let x = 0;
 	for(const mdf of metadataFiles) {
 		const data = fs.readFileSync("metadata/" + mdf, "utf8");
-		metadata[x++] = JSON.parse(data);
+		metadata[x++] = JSON.parse(data) as MetadataFile;
 	}
 }
 
@@ -268,7 +275,7 @@ function pullInMetadata() {
 const server = http.createServer((req, res) => {
 	// Requested file path
 	const filePath = "." + req.url;
-	const extension = filePath.match(/\.[^.]+$/)[0];
+	const extension = /\.[^.]+$/.exec(filePath)[0];
 
 	// Detect content type
 	let contentType = "text/html";
