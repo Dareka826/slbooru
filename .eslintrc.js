@@ -12,6 +12,7 @@ module.exports = {
     "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
   rules: {
-    "semi": [ "error", "always" ]
+    "semi": [ "error", "always" ],
+    "space-before-function-paren": [ "warn", "never" ]
   }
 };
