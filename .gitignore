@@ -1,4 +1,5 @@
 node_modules
 metadata
 img
-*.js
+src/*.js
+server.js
