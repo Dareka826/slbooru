@@ -36,8 +36,7 @@ search_input.addEventListener("keypress", function(e) {
 // Changes the query by adding or excluding tags
 type TagChangeMode = "add" | "exclude";
 // The function is used in index.html, not here
-/* eslint-disable @typescript-eslint/no-unused-vars */
-function changeQuery(tag:string, mode:TagChangeMode) {
+function changeQuery(tag:string, mode:TagChangeMode) { // eslint-disable-line @typescript-eslint/no-unused-vars
 	if(mode == "add")          query += " " + tag;
 	else if(mode == "exclude") query += " -" + tag;
 	// Remove leading space
