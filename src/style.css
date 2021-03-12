@@ -90,7 +90,7 @@ body {
 
 .count { color: #ccc; }
 
-a                 { outline: 0;      }
+*                 { outline: 0;      }
 a:link, a:visited {  color: #f60;    }
 a:hover           { cursor: pointer; }
 a:active          {  color: #60f;    }
