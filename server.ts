@@ -23,7 +23,7 @@ interface MetadataFile {
 // Load index.html data at server start;
 const pageTemplate = fs.readFileSync("src/index.html", "utf8");
 const picsPerPage = 24; // How many pictures to display on a page
-const metadata:Array<MetadataFile> = []; // All images' metadata is stored here (probably bad)
+const metadata:Array<MetadataFile> = []; // All images' metadata
 
 // Generate the page based on the GET parameters
 function genPage(urlparams:URLSearchParams):string {
@@ -221,8 +221,9 @@ function genPic(id:number, variant:ImageVariant, query=""):string {
 	let e = "";
 	e += `<div class="${ _divclass }"><a href="${ _url }">`;
 	if(videoTypes.includes(file_extension))
-		e += `<video ${_video_opts} src="${ file_url }" class="${ _imgclass }"/></a></div>`;
-	else e += `<img src="${ file_url }" class="${ _imgclass }"/></a></div>`;
+		e += `<video ${_video_opts} src="${ file_url }" class="${ _imgclass }"/>`;
+	else e += `<img src="${ file_url }" class="${ _imgclass }"/>`;
+	e += `</a></div>`;
 
 	return e;
 }
