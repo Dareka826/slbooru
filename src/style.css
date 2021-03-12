@@ -132,6 +132,6 @@ a:active          {  color: #60f;    }
 	cursor: default;
 }
 
-video {
+.image-small-container video {
 	border: 2px solid #60f;
 }
