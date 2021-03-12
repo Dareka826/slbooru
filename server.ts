@@ -11,6 +11,7 @@ const extensionsMIME:Record<string, string> = {
 	".mp4" : "video/mp4",
 	".webm": "video/webm"
 };
+// Which extensions are to be in video tags, instead of img
 const videoTypes = [ ".mp4", ".webm" ];
 
 // Create an interface for the format of metadata files
