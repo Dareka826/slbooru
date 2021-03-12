@@ -1,12 +1,24 @@
 #!/usr/bin/env bash
 
 mkdir -p metadata img
+TMPD=$(mktemp -d)
 
 # Every argument is an item
 for item in "$@"; do
 	# Calculate the item's checksum and get it's extension
 	CHKSUM=$(sha256sum "$item" | cut -d' ' -f1)
 	EXTENSION=$(echo "$item" | grep -Po "\.[^.]+$")
+
+	if [ "$EXTENSION" = ".mkv" ]; then
+		NEW_EXT=".mp4"
+		if ffprobe 2>&1 | grep Stream | grep Video | grep vp ; then
+			NEW_EXT=".webm"
+		fi
+		ffmpeg -i "$item" -c copy "$TMPD/$(basename "$item")${NEW_EXT}"
+		item="$TMPD/$(basename "${item}${NEW_EXT}")"
+		CHKSUM=$(sha256sum "$item" | cut -d' ' -f1)
+		EXTENSION=$(echo "$item" | grep -Po "\.[^.]+$")
+	fi
 
 	# Check if same checksum exists in img/
 	if [ -e "metadata/${CHKSUM}${EXTENSION}" ]; then
@@ -23,3 +35,6 @@ for item in "$@"; do
 		echo "Created metadata/$((BIGGEST_ID + 1)).json with empty tags"
 	fi
 done
+
+rm -rf $TMPD
+
