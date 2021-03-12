@@ -2,9 +2,9 @@
   "name": "slbooru",
   "author": "Dareka826",
   "scripts": {
-	  "build": "tsc --outFile src/script.js src/script.ts && tsc server.ts",
-	  "test": "npm run build && node server.js",
-	  "lint": "npx eslint . --ext .ts"
+    "build": "tsc --outFile src/script.js src/script.ts && tsc server.ts",
+    "test": "npm run build && node server.js",
+    "lint": "npx eslint . --ext .ts"
   },
   "devDependencies": {
     "@types/node": "^14.14.34",
