@@ -1,6 +1,5 @@
-const http = require("http"); // For server
-const fs   = require("fs");   // For reading files
-const url  = require("url");  // For parsing url get requests
+import * as http from "http"; // For server
+import * as fs   from "fs";   // For reading files
 
 // The content type in header for files
 const extensionsMIME = {
@@ -29,12 +28,12 @@ function genPage(urlparams:URLSearchParams):string {
 		// Posts view
 		const page_id = Number(urlparams.get("p") || "0");
 
-		let candidates:Array<number> = matchImagesToQuery(query);
+		const candidates:Array<number> = matchImagesToQuery(query);
 		candidates.sort((a, b) => a > b ? -1 : a == b ? 0 : 1); // Reverse sort
 
 		// No results for query
 		if(candidates.length == 0) {
-			let picDOM = '<div class="info-notfound">No results</div>';
+			const picDOM = '<div class="info-notfound">No results</div>';
 			return data.replace("<!--TAGS-->", picDOM);
 		}
 
@@ -44,7 +43,7 @@ function genPage(urlparams:URLSearchParams):string {
 
 		if(lowerID > candidates.length) {
 			// Page number out of range
-			let picDOM = '<div class="info-notfound">Page index out of range!</div>';
+			const picDOM = '<div class="info-notfound">Page index out of range!</div>';
 			return data.replace("<!--PICS-->", picDOM);
 		}
 
@@ -53,8 +52,8 @@ function genPage(urlparams:URLSearchParams):string {
 			// Iterate over ids on page
 			picDOM += genPic(candidates[id], "small", query);
 
-		let tagDOM = genTags(candidates, query);
-		let navbarDOM = navbarGen(
+		const tagDOM = genTags(candidates, query);
+		const navbarDOM = navbarGen(
 			page_id, Math.ceil(candidates.length/picsPerPage), query
 		);
 
@@ -72,7 +71,7 @@ function genPage(urlparams:URLSearchParams):string {
 			`href="img/${metadata[image_id].file}">Original Image</a></div>`;
 
 		// Generate the tag view
-		let tagDOM = genTagsSingleImage(image_id);
+		const tagDOM = genTagsSingleImage(image_id);
 
 		// Change flexbox direction
 		data = data.replace(
@@ -90,18 +89,18 @@ function genPage(urlparams:URLSearchParams):string {
 
 // Get all qualified images matched by query
 function matchImagesToQuery(query:string):Array<number> {
-	let qualified:Array<number> = [];
-	let rules = query.split(" ");
+	const qualified:Array<number> = [];
+	const rules = query.split(" ");
 
 	// Initialize with all
 	for(let i = 0; i < metadata.length; i++)
 		qualified.push(i);
 
 	// For every rule in query
-	for(let rule of rules) {
+	for(const rule of rules) {
 		if(rule[0] == '-') {
 			// Exclude tag
-			let tag = rule.substr(1, rule.length);
+			const tag = rule.substr(1, rule.length);
 
 			// Remove ids that have the tag
 			for(let i = qualified.length-1; i >= 0; i--)
@@ -109,7 +108,7 @@ function matchImagesToQuery(query:string):Array<number> {
 					qualified.splice(i, 1);
 		} else if(rule != "") {
 			// Match tag
-			let tag = rule;
+			const tag = rule;
 			// Remove ids that don't have the tag
 			for(let i = qualified.length-1; i >= 0; i--)
 				if(!metadata[qualified[i]].tags.includes(tag))
@@ -123,11 +122,11 @@ function matchImagesToQuery(query:string):Array<number> {
 // Create tag elements from candidates
 function genTags(candidates:Array<number>, query:string):string {
 	let tagDOM = "";
-	let tags:Object = {};
+	const tags:Record<string, number> = {};
 
 	// Get the tags already in use
-	let tags_in_query = [];
-	for(let rule of query.split(" ")) {
+	const tags_in_query = [];
+	for(const rule of query.split(" ")) {
 		if(rule[0] == "-")
 			tags_in_query.push(rule.substr(1,query.length));
 		else if(rule != "")
@@ -135,15 +134,15 @@ function genTags(candidates:Array<number>, query:string):string {
 	}
 
 	// Get and count the tags from pictures selected by query
-	for(let id of candidates) {
-		for(let tag of metadata[id].tags) {
+	for(const id of candidates) {
+		for(const tag of metadata[id].tags) {
 			if(Object.keys(tags).includes(tag)) tags[tag] += 1;
 			else                                tags[tag]  = 1;
 		}
 	}
 
 	// Generate tags excluding those in use
-	for(let tag of Object.keys(tags).sort())
+	for(const tag of Object.keys(tags).sort())
 		if(!tags_in_query.includes(tag))
 			tagDOM += createTagElem(tag, tags[tag], true);
 
@@ -153,10 +152,10 @@ function genTags(candidates:Array<number>, query:string):string {
 // Create tag elements
 function genTagsSingleImage(image_id:number):string {
 	let tagDOM = "";
-	let tags = metadata[image_id].tags.sort();
+	const tags = metadata[image_id].tags.sort();
 
 	// For every tag of the image
-	for(let tag of tags) {
+	for(const tag of tags) {
 		// Count the number of occurences of the tag
 		let tagCount = 0;
 		for(let i = 0; i < metadata.length; i++)
@@ -190,16 +189,15 @@ function createTagElem(tag:string, count:number, functional_opts:boolean) {
 
 // Create picture's DOM
 type ImageVariant = "small" | "large";
-function genPic(id:number, variant:ImageVariant, query:string=""):string {
-	let params = new URLSearchParams();
+function genPic(id:number, variant:ImageVariant, query=""):string {
+	const params = new URLSearchParams();
 	params.set("m", "i");
 	params.set("i", id.toString());
 	params.set("q", query);
 
-	let file_url = "/img/" + metadata[id].file;
-	let file_extension = file_url.match(/\.[^.]+$/)[0];
-	let _divclass = "", _url = "", _imgclass = "";
-	let _video_opts = "";
+	const file_url = "/img/" + metadata[id].file;
+	const file_extension = file_url.match(/\.[^.]+$/)[0];
+	let _divclass = "", _url = "", _imgclass = "", _video_opts = "";
 
 	if(variant == "small") {
 		_divclass = "image-small-container";
@@ -238,7 +236,7 @@ function navbarGen(page_id:number, total_pages:number, query:string) {
 		btn_next_href = "";
 	}
 
-	let e = `<div id="pages-nav">` +
+	const e = `<div id="pages-nav">` +
 		`<a href="${btn_prev_href}">` +
 		`<button id="prev-page-btn" ${btn_prev_disable}>&lt;</button></a>` +
 		`<div id="page-indicator">${page_id+1}/${total_pages}</div>` +
@@ -252,25 +250,25 @@ function navbarGen(page_id:number, total_pages:number, query:string) {
 // Reads the metadata json files and puts them into the metadata variable
 function pullInMetadata() {
 	const metadataFiles = fs.readdirSync("metadata").sort((a:string, b:string) => {
-		let id1:number = Number(a.match(/[0-9]+/)[0]);
-		let id2:number = Number(b.match(/[0-9]+/)[0]);
+		const id1 = Number(a.match(/[0-9]+/)[0]);
+		const id2 = Number(b.match(/[0-9]+/)[0]);
 
 		if(id1 < id2) return -1;
 		if(id1 > id2) return  1;
 		return 0;
 	});
 	let x = 0;
-	for(let mdf of metadataFiles) {
-		let data = fs.readFileSync("metadata/" + mdf);
+	for(const mdf of metadataFiles) {
+		const data = fs.readFileSync("metadata/" + mdf, "utf8");
 		metadata[x++] = JSON.parse(data);
 	}
 }
 
 // The server
-const server = http.createServer((req:any, res:any) => {
+const server = http.createServer((req, res) => {
 	// Requested file path
-	let filePath = "." + req.url;
-	let extension = filePath.match(/\.[^.]+$/)[0];
+	const filePath = "." + req.url;
+	const extension = filePath.match(/\.[^.]+$/)[0];
 
 	// Detect content type
 	let contentType = "text/html";
@@ -288,7 +286,7 @@ const server = http.createServer((req:any, res:any) => {
 	}
 
 	// Get url GET parameters
-	let urlparams = new URLSearchParams(req.url.replace(/^\//, ""));
+	const urlparams = new URLSearchParams(req.url.replace(/^\//, ""));
 
 	// Set HTTP header
 	res.statusCode = 200;
