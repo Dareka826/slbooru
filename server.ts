@@ -30,6 +30,7 @@ function genPage(urlparams:URLSearchParams):string {
 		const page_id = Number(urlparams.get("p") || "0");
 
 		let candidates:Array<number> = matchImagesToQuery(query);
+		candidates.sort((a, b) => a > b ? -1 : a == b ? 0 : 1); // Reverse sort
 
 		// No results for query
 		if(candidates.length == 0) {
