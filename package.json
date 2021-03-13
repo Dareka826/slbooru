@@ -4,7 +4,7 @@
 	"scripts": {
 		"build": "tsc --outFile src/script.js src/script.ts && tsc server.ts",
 		"test": "yarn run build && node server.js",
-		"lint": "yarn run eslint . --ext .ts"
+		"lint": "yarn run eslint ."
 	},
 	"devDependencies": {
 		"@types/node": "^14.14.34",
