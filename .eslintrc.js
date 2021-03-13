@@ -14,5 +14,6 @@ module.exports = {
 	rules: {
 		"semi": [ "error", "always" ],
 		"space-before-function-paren": [ "warn", "never" ]
-	}
+	},
+	ignorePatterns: [ "*.js" ]
 };
