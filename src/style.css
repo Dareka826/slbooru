@@ -90,10 +90,10 @@ body {
 
 .count { color: #ccc; }
 
-*                 { outline: 0;      }
-a:link, a:visited {  color: #f60;    }
-a:hover           { cursor: pointer; }
-a:active          {  color: #60f;    }
+*                 { outline: 0;       }
+a:link, a:visited {   color: #f60;    }
+a:hover           {  cursor: pointer; }
+a:active          {   color: #60f;    }
 
 .info-notfound {
 	margin: 5px;
