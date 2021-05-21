@@ -21,3 +21,8 @@ Metadata file format (see example.json):
 To prepare the environment for building: `npm install`
 To build the server and site script run `./scripts/build.sh`
 To add a new image run `./scripts/add_img_to_db.sh`
+
+# TODO
+
+[ ] Move HTML element templates from code into separate files
+
