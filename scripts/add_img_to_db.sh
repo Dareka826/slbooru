@@ -6,7 +6,8 @@ TMPD=$(mktemp -d)
 # Every argument is an item
 for item in "$@"; do
 	# Calculate the item's checksum and get it's extension
-	CHKSUM=$(sha256sum "$item" | cut -d' ' -f1)
+	#CHKSUM=$(sha256sum "$item" | cut -d' ' -f1)
+	CHKSUM=$(identify -format "%#" "$item")
 	EXTENSION=$(echo "$item" | grep -Po "\.[^.]+$")
 	EXT_LC=$(echo "$EXTENSION" | tr "[:upper:]" "[:lower:]")
 
@@ -17,7 +18,8 @@ for item in "$@"; do
 		fi
 		ffmpeg -i "$item" -c copy "$TMPD/$(basename "$item")${NEW_EXT}"
 		item="$TMPD/$(basename "${item}${NEW_EXT}")"
-		CHKSUM=$(sha256sum "$item" | cut -d' ' -f1)
+		#CHKSUM=$(sha256sum "$item" | cut -d' ' -f1)
+		CHKSUM=$(identify -format "%#" "$item")
 		EXTENSION=$NEW_EXT
 		EXT_LC=$EXTENSION
 	fi
